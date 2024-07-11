@@ -6,25 +6,20 @@
   <title>Metronome</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
   <style>
-    body {
+    html, body {
       font-family: Georgia, 'Times New Roman', Times, serif;
+      background-color: #b6b48e; /* Cream color */
+      margin: 0; /* Remove default margin */
+      padding: 0; /* Remove default padding */
+      height: 100%;
     }
 
     .container {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
       margin-top: 50px;
-      padding: 0 20px; /* Added padding for spacing */
-    }
-
-    .controls {
-      flex: 1; /* Take up remaining space */
-      margin-right: 20px; /* Added margin for spacing */
     }
 
     #feedback {
-      flex: 1; /* Take up remaining space */
+      width: 100%;
       height: 100px;
       background-color: white;
       border: 1px solid black;
@@ -34,47 +29,68 @@
     #instructions {
       margin-bottom: 20px;
     }
+
+    .image-custom {
+      width: 400px; /* Set the width to 200px */
+      height: auto; /* Maintain the aspect ratio */
+      margin-left: 200px; /* Adjust this value to shift the image to the right */
+    }
+
+    .box {
+      max-width: 400px;
+      margin: 0 auto;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="controls">
-      <h1 class="title">Metronome App</h1>
-      <p id="instructions">Select a click sound, adjust BPM, and click Start to begin the metronome.
-         For timing feedback, click the space bar on every beat.<br>The white rectangle will flash red if you are rushing,
-          yellow if you are dragging, and green if your timing is correct.</p>
+    <h1 class="title has-text-centered">Metro-gnome</h1>
+    <p id="instructions" class="has-text-centered">Select a click sound, adjust BPM, and click Start to begin the metronome.
+       For timing feedback, click the space bar on every beat.<br>The white rectangle will flash red if you are rushing,
+        yellow if you are dragging, and green if your timing is correct.</p>
 
-      <div class="field">
-        <label for="sound-select" class="label">Choose click sound:</label>
-        <div class="control">
-          <div class="select">
-            <select id="sound-select">
-              <option value="click1">Click 1</option>
-              <option value="click2">Click 2</option>
-              <option value="click3">Click 3</option>
-            </select>
+    <div class="columns is-vcentered">
+      <div class="column is-one-third">
+        <figure class="image image-custom">
+          <img src="https://santimeza.github.io/metro-gnome/imageFiles/metrognome_head.jpg" alt="Metro-gnome Image">
+        </figure>
+      </div>
+      <div class="column is-two-thirds">
+        <div class="box">
+          <div class="field">
+            <label for="sound-select" class="label">Choose click sound:</label>
+            <div class="control">
+              <div class="select">
+                <select id="sound-select">
+                  <option value="click1">Click 1</option>
+                  <option value="click2">Click 2</option>
+                  <option value="click3">Click 3</option>
+                </select>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <div class="field">
-        <label for="bpm" class="label">BPM:</label>
-        <div class="control">
-          <input type="range" id="bpm-slider" class="slider is-fullwidth is-info" min="40" max="240" value="100">
-          <button id="bpm-decrease" class="button is-small is-info">-</button>
-          <span id="bpm-display" class="has-text-info">100</span>
-          <button id="bpm-increase" class="button is-small is-info">+</button>
-        </div>
-      </div>
+          <div class="field">
+            <label for="bpm" class="label">BPM:</label>
+            <div class="control">
+              <input type="range" id="bpm-slider" class="slider is-fullwidth is-info" min="40" max="240" value="100">
+              <button id="bpm-decrease" class="button is-small is-info">-</button>
+              <span id="bpm-display" class="has-text-info">100</span>
+              <button id="bpm-increase" class="button is-small is-info">+</button>
+            </div>
+          </div>
 
-      <div class="field">
-        <div class="control">
-          <button id="start-stop" class="button is-primary">Start/Stop</button>
+          <div class="field">
+            <div class="control">
+              <button id="start-stop" class="button is-primary">Start/Stop</button>
+            </div>
+          </div>
+          
+          <div id="feedback"></div>
+          
         </div>
       </div>
     </div>
-
-    <div id="feedback"></div>
   </div>
 
   <script src="metronome.js"></script>
