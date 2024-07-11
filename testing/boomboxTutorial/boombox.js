@@ -1,10 +1,13 @@
 const audioContext = new AudioContext();
 
+// create audio graph
 const audioElement = document.querySelector("audio");
 const track = audioContext.createMediaElementSource(audioElement);
-track.connect(audioContext.destination);
+const gainNode = audioContext.createGain();
+track.connect(gainNode).connect(audioContext.destination);
 
 const playButton = document.querySelector("button");
+const volumeControl = document.querySelector("#volume");
 
 playButton.addEventListener(
   "click",
@@ -22,6 +25,14 @@ playButton.addEventListener(
       audioElement.pause();
       playButton.dataset.playing = "false";
     }
+  },
+  false,
+);
+
+volumeControl.addEventListener(
+  "input",
+  () => {
+    gainNode.gain.value = volumeControl.value;
   },
   false,
 );
