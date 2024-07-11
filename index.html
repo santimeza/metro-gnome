@@ -39,12 +39,13 @@
     .box {
       max-width: 400px;
       margin: 0 auto;
+      background-color: #8ba484;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1 class="title has-text-centered">Metro-gnome</h1>
+    <h1 class="title has-text-centered"><strong>Metro-gnome</strong></h1>
     <p id="instructions" class="has-text-centered">Select a click sound, adjust BPM, and click Start to begin the metronome.
        For timing feedback, click the space bar on every beat.<br>The white rectangle will flash red if you are rushing,
         yellow if you are dragging, and green if your timing is correct.</p>
@@ -61,7 +62,7 @@
             <label for="sound-select" class="label">Choose click sound:</label>
             <div class="control">
               <div class="select">
-                <select id="sound-select">
+                <select id="sound-select" class="is-info">
                   <option value="click1">Click 1</option>
                   <option value="click2">Click 2</option>
                   <option value="click3">Click 3</option>
@@ -75,14 +76,14 @@
             <div class="control">
               <input type="range" id="bpm-slider" class="slider is-fullwidth is-info" min="40" max="240" value="100">
               <button id="bpm-decrease" class="button is-small is-info">-</button>
-              <span id="bpm-display" class="has-text-info">100</span>
+              <span id="bpm-display" class="has-text-black">100</span>
               <button id="bpm-increase" class="button is-small is-info">+</button>
             </div>
           </div>
 
           <div class="field">
             <div class="control">
-              <button id="start-stop" class="button is-primary">Start/Stop</button>
+              <button id="start-stop" class="button is-success">Start/Stop</button>
             </div>
           </div>
           
@@ -91,6 +92,7 @@
         </div>
       </div>
     </div>
+    <a href="about.html" class="button is-link">About</a>
   </div>
 
   <script src="metronome.js"></script>
