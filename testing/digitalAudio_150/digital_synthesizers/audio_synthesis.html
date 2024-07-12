@@ -1,14 +1,43 @@
-<h1>JavaScript Synthesizer Examples</h1>
-<ul>
-	<li><a href='simple_synth_pitch_shift.html'>Simple Synth with Pitch Shift</a></li>
-	<li><a href='whole_tone_triads.html'>Keyboard Whole Tone Chords</a></li>
-	<li><a href='diatonic_chords.html'>Keyboard Diatonic Chords</a></li>
-</ul>
-<pre style="font-size: 14px">
-Follow the instructions in each example to generate audio. To see the code, use "Show Page Source" or similar in your browser. Alternatively, download the HTML files and run them locally.
-</pre>
-<pre style="font-size: 14px">
-- Simple Synth with Pitch Shift: A symple synthesizer that plays a constant tone on activation. Shift the pitch of the tone with the slider or keys, mute options avaliable.<br>
-- Whole Tone Chords: Plays triad of the whole tone scale using the keyboard.<br>
-- Diatonic Chords: Plays the diatonic chords of a key. Change the key with the drop menu, as well as wave type, and chord type.
-</pre>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple JavaScript Synthesizers</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.1/css/bulma.min.css">
+    <style>
+        .content {
+            margin-top: 20px;
+        }
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <section class="section">
+        <div class="container">
+            <h1 class="title mb-5">Simple JavaScript Synthesizers</h1>
+            <div class="content">
+                <p>Follow the instructions in each example to generate audio. To see the code, use "Show Page Source" or similar in your browser. Alternatively, download the HTML files and run them locally.</p>
+                <div class="buttons">
+                    <a href="simple_synth_pitch_shift.html" class="button is-link">Simple Synth with Pitch Shift</a>
+                    <a href="whole_tone_triads.html" class="button is-link">Keyboard Whole Tone Chords</a>
+                    <a href="diatonic_chords.html" class="button is-link">Keyboard Diatonic Chords</a>
+                </div>
+                <div class="box">
+                    <p><strong>Simple Synth with Pitch Shift:</strong> A simple synthesizer that plays a constant tone on activation. Shift the pitch of the tone with the slider or keys, mute options available.</p>
+                    <p><strong>Whole Tone Chords:</strong> Plays triads of the whole tone scale using the keyboard.</p>
+                    <p><strong>Diatonic Chords:</strong> Plays the diatonic chords of a key. Change the key with the drop-down menu, as well as wave type, and chord type.</p>
+                </div>
+            </div>
+            <div class="buttons">
+                <a href="../../testing_director.html" class="button is-warning">Back to Other Projects</a>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

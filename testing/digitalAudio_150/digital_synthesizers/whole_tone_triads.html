@@ -1,15 +1,50 @@
 <!DOCTYPE html>
-<html>
-    <div class="right">
-        <span>Current Waveform: </span>
-        <select name="Waveform">
-            <option value="sine">Sine</option>
-            <option value="square">Square</option>
-            <option value="sawtooth">Sawtooth</option>
-            <option value="triangle" selected>Triangle</option>
-        </select>
-    </div>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waveform Settings</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.1/css/bulma.min.css">
+</head>
+<body>
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Current Waveform:</label>
+                        <div class="control">
+                            <div class="select">
+                                <select name="Waveform">
+                                    <option value="sine">Sine</option>
+                                    <option value="square">Square</option>
+                                    <option value="sawtooth">Sawtooth</option>
+                                    <option value="triangle" selected>Triangle</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h1 class="title is-2">Whole Tone Triads</h1>
+            <h2 class="subtitle is-2"><a href="JavaScript:onUserWantsToStart();" class="button is-link">START SYNTHESIS</a></h2>
+            <div class="box">
+                <p>Click <strong>START SYNTHESIS</strong> or press any key to begin. Keys will play whole tone scale triads 
+                    (triads are three consecutive notes as opposed to the classic triad). <br><br>
+                        <strong>[Z] - [M]</strong> - lower octave <br> 
+                        <strong>[A] - [J]</strong> - middle octave <br>
+                        <strong>[Q] - [U]</strong> - upper octave <br>
+                </p>
+            </div>
+            <h4><a href='audio_synthesis.html' class="button is-warning">back</a></h4>
+        </div>
+    </section>
+
     <script>
         var audio_cont = new AudioContext();
         var buffer_source = audio_cont.createBufferSource();
@@ -539,16 +574,5 @@
         }
 
     </script>
-</head>
-<body>
-    <h2>Whole Tone Triads</h2>
-    <h2><a href="JavaScript:onUserWantsToStart();">START SYNTHESIS</a></h2>
-    <pre style="font-size: 14px">Click START SYNTHESIS or press any key to begin. Keys will play whole tone scale triads 
-    (triads are three consecutive notes as opposed to the classic triad). <br><br>
-        [Z] - [M] - lower octave <br>
-        [A] - [J] - middle octave <br>
-        [Q] - [U] - upper octave <br>
-    </pre>
-    <h4><a href='audio_synthesis.html'>back</a></h4>
 </body>
 </html>

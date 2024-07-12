@@ -1,48 +1,109 @@
 <!DOCTYPE html>
-<html>
-    <div class="right">
-        <span>Current Waveform: </span>
-        <select name="Waveform">
-            <option value="sine">Sine</option>
-            <option value="square">Square</option>
-            <option value="sawtooth">Sawtooth</option>
-            <option value="triangle" selected>Triangle</option>
-        </select>
-    </div>
-    <div class="temperment">
-        <span>Current Temperment: </span>
-        <select name="Temperment">
-            <option value="Equal" selectedS>Equal</option>
-            <option value="Just">Just intonation</option>
-        </select>
-    </div>
-    <div class="chords">
-        <span>Chord type: </span>
-        <select name="Chord_type">
-            <option value="Triads" selected>Triads</option>
-            <option value="Sevenths">Sevenths</option>
-        </select>
-    </div>
-    <div class="key">
-        <span>Chord type: </span>
-        <select name="Key">
-            <option value="A" selected>A</option>
-            <option value="A#">A#</option>
-            <option value="B">B</option>
-            <option value="C">C</option>
-            <option value="C#">C#</option>
-            <option value="D">D</option>
-            <option value="D#">D#</option>
-            <option value="E">E</option>
-            <option value="F">F</option>
-            <option value="F#">F#</option>
-            <option value="G">G</option>
-            <option value="G#">G#</option>
-
-        </select>
-    </div>
-    
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diatonic Chords Synthesizer</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.1/css/bulma.min.css">
+</head>
+<style>
+    .content {
+        margin-top: 20px;
+    }
+    .buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
+    }
+</style>
+<body>
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-one-quarter">
+                    <div class="field">
+                        <label class="label">Current Waveform:</label>
+                        <div class="control">
+                            <div class="select">
+                                <select name="Waveform">
+                                    <option value="sine">Sine</option>
+                                    <option value="square">Square</option>
+                                    <option value="sawtooth">Sawtooth</option>
+                                    <option value="triangle" selected>Triangle</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-one-quarter">
+                    <div class="field">
+                        <label class="label">Current Temperament:</label>
+                        <div class="control">
+                            <div class="select">
+                                <select name="Temperment">
+                                    <option value="Equal" selected>Equal</option>
+                                    <option value="Just">Just intonation</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-one-quarter">
+                    <div class="field">
+                        <label class="label">Chord type:</label>
+                        <div class="control">
+                            <div class="select">
+                                <select name="Chord_type">
+                                    <option value="Triads" selected>Triads</option>
+                                    <option value="Sevenths">Sevenths</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-one-quarter">
+                    <div class="field">
+                        <label class="label">Key:</label>
+                        <div class="control">
+                            <div class="select">
+                                <select name="Key">
+                                    <option value="A" selected>A</option>
+                                    <option value="A#">A#</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="C#">C#</option>
+                                    <option value="D">D</option>
+                                    <option value="D#">D#</option>
+                                    <option value="E">E</option>
+                                    <option value="F">F</option>
+                                    <option value="F#">F#</option>
+                                    <option value="G">G</option>
+                                    <option value="G#">G#</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="title is-2">Diatonic Chords</h2>
+            <h2 class="subtitle is-2"><a href="JavaScript:onUserWantsToStart();" class="button is-link">START SYNTHESIS</a></h2>
+            <div class="box">
+                <p>
+                    Click <strong>START SYNTHESIS</strong> or press any key to begin. Keys <strong>[A] - [K]</strong> will each play a diatonic chord in a key (default: A4). Choose between equal temperament and just intonation above and experiment with different waves. Also above, toggle between triads/seventh chords and change key. <br><br>
+                    <strong>Tips:</strong> <br> - sawtooth wave has a clear audible difference between equal temperament and just intonation.
+                    <br> - After changing keys, click on the screen to stop highlighting key selection, to avoid accidentally changing keys.<br> <br>
+                </p>
+            </div>
+            <h4><a href='audio_synthesis.html' class="button is-warning">back</a></h4>
+        </div>
+    </section>
+
     <script>
         var audio_cont = new AudioContext();
         var buffer_source = audio_cont.createBufferSource();
@@ -640,14 +701,5 @@
         }
 
     </script>
-</head>
-<body>
-    <h2>Diatonic Chords</h2>
-    <h2><a href="JavaScript:onUserWantsToStart();">START SYNTHESIS</a></h2>
-    <pre style="font-size: 14px">Click START SYNTHESIS or press any key to begin. Keys 'A' - 'K' will each play a diatonic chord a key (default: A4). 
-    Choose between equal temperment and just intonation above and experiment with different waves. Also above, toggle between triads/seventh chords and change key. <br><br>
-    Tips: <br> - sawtooth wave has a clear audible difference between equal temperment and just intonation.
-    <br> - After changing keys click on the screen to stop highlinging key selection, to avoid accedentaly changing keys. </pre>
-    <h4><a href='audio_synthesis.html'>back</a></h4>
 </body>
 </html>

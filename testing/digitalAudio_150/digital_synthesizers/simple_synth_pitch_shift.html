@@ -1,33 +1,61 @@
 <!DOCTYPE html>
-<html>
-    <div class="settingsBar">
-        <div class="left">
-            <span>Pitch: </span>
-            <input
-              type="range"
-              min="0.99999"
-              max="1.00001"
-              step="0.000001"
-              value="1.0"
-              list="pitches"
-              name="pitch" />
-            <datalist id="pitch">
-                <option value="0.5" label="L_oct"></option>
-                <option value="2.0" label="U_oct"></option>
-            </datalist>
-        </div>
-    </div>
-    
-    <div class="right">
-        <span>Current Waveform: </span>
-        <select name="Waveform">
-            <option value="sine">Sine</option>
-            <option value="square">Square</option>
-            <option value="sawtooth">Sawtooth</option>
-            <option value="triangle" selected>Triangle</option>
-        </select>
-    </div>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.1/css/bulma.min.css">
+</head>
+<body>
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-one-third">
+                    <div class="field">
+                        <label class="label">Pitch:</label>
+                        <div class="control">
+                            <input type="range" min="0.99999" max="1.00001" step="0.000001" value="1.0" list="pitches" name="pitch">
+                        </div>
+                        <datalist id="pitches">
+                            <option value="0.5" label="L_oct"></option>
+                            <option value="2.0" label="U_oct"></option>
+                        </datalist>
+                    </div>
+                </div>
+                <div class="column is-two-thirds">
+                    <div class="field">
+                        <label class="label">Current Waveform:</label>
+                        <div class="control">
+                            <div class="select">
+                                <select name="Waveform">
+                                    <option value="sine">Sine</option>
+                                    <option value="square">Square</option>
+                                    <option value="sawtooth">Sawtooth</option>
+                                    <option value="triangle" selected>Triangle</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="section">
+        <div class="container">
+            <h1 class="title is-2">Simple Audio Synthesizer</h1>
+            <h2 class="subtitle is-2"><a href="JavaScript:onUserWantsToStart();" class="button is-link">START SYNTHESIS</a></h2>
+            <h2 class="subtitle is-2"><a href="JavaScript:muteButton();" class="button is-danger">mute</a></h2>
+            <div class="box">
+                <p> Press start <strong>START SYNTHESIS</strong> or press any key to begin. Spacebar can be used as <strong>mute</strong> toggle. 
+                    Pressing <strong>[R]</strong> will reset the pitch slider and sustain the note (muting will reset the pitch slider).
+                    Pressing <strong>[E]</strong> and <strong>[T]</strong> will toggle the pitch slider to the minimum and the maximum respectively.
+                </p>
+            </div>
+            <h4><a href='audio_synthesis.html' class="button is-warning">back</a></h4>
+        </div>
+    </section>
+
     <script>
         var audio_cont = new AudioContext();
         var buffer_source = audio_cont.createBufferSource();
@@ -203,15 +231,14 @@
         }
 
     </script>
+</body>
+</html>
+
+
+
+    
 </head>
 <body>
-    <h1>Simple Audio Synthesizer</h1>
-    <h2><a href="JavaScript:onUserWantsToStart();">START SYNTHESIS</a></h2>
-    <h3><a href="JavaScript:muteButton();">mute</a></h3>
-    <pre style="font-size: 14px"> Press start START SYNTHESIS or press any key to begin. Spacebar can be used as mute toggle. 
-        Pressing 'R' will reset the pitch slider and sustain the note (muting will reset the pitch slider).
-        Pressing 'E' and 'T' will toggle the pitch slider to the minimum and the maximum respectively.
-    </pre>
-    <h4><a href='audio_synthesis.html'>back</a></h4>
+    
 </body>
 </html>
