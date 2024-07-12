@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+    <div class="right">
+        <span>Current Waveform: </span>
+        <select name="Waveform">
+            <option value="sine">Sine</option>
+            <option value="square">Square</option>
+            <option value="sawtooth">Sawtooth</option>
+            <option value="triangle" selected>Triangle</option>
+        </select>
+    </div>
+<head>
+    <script>
+        var audio_cont = new AudioContext();
+        var buffer_source = audio_cont.createBufferSource();
+        var script_processor = audio_cont.createScriptProcessor(4096, 0, 1);
+        
+        const wavePicker = document.querySelector("select[name='Waveform']")
+
+        var channels = [0, 0, 0];
+        var num_channels = 3;
+        var phis = [0, 0, 0];
+        var freqs = [0, 0, 0];
+
+        var a_440 = 440;
+        var factor = Math.pow(2, (1/12))
+
+
+        muting = true;
+        started = false;
+        key_down = false;
+
+        var max_amplitude = 0.1;
+        var audioOn = false
+
+        var current_amplitude = 0.0;
+        var target_amplitude = 0.1;
+        // var volume_shift_rate = 0.000005;    // increased from other version, test to see if higher val required'
+        var attack = 0.0001;
+        var decay = 0.000001;
+
+
+        // whole tone chords
+        window.addEventListener("keydown", evt => {
+            if (started == false) {
+                started = true;
+                onUserWantsToStart();
+            }
+
+            // whole tone triads
+            // middle octave
+            if (evt.key == "a") {
+                if (key_down == false) {
+                    freqs[0] = a_440 * Math.pow(factor, 0);
+                    freqs[1] = a_440 * Math.pow(factor, 2);
+                    freqs[2] = a_440 * Math.pow(factor, 4);
+
+                    if (muting == true)
+                    {
+                        muteButton();
+                    }
+                    key_down = true;
+                }
+            }
+            if (evt.key == "s") {
+                if (key_down == false) {
+                    freqs[0] = a_440 * Math.pow(factor, 2);
+                    freqs[1] = a_440 * Math.pow(factor, 4);
+                    freqs[2] = a_440 * Math.pow(factor, 6);
+
+                    if (muting == true) {
+                        muteButton();
+                    }
+                    key_down = true;
+                }
+            }
+            if (evt.key == "d") {
+                if (key_down == false) {
+                    freqs[0] = a_440 * Math.pow(factor, 4);
+                    freqs[1] = a_440 * Math.pow(factor, 6);
+                    freqs[2] = a_440 * Math.pow(factor, 8);
+                    
+                    if (muting == true) {
+                        muteButton();
+                    }
+                    key_down = true;
+                }
+            }
+            if (evt.key == "f") {
+                if (key_down == false) {
+                    freqs[0] = a_440 * Math.pow(factor, 6);
+                    freqs[1] = a_440 * Math.pow(factor, 8);
+                    freqs[2] = a_440 * Math.pow(factor, 10);
+                    
+                    if (muting == true) {
+                        muteButton();
+                    }
+                    key_down = true;
+                }
+            }
+            if (evt.key == "g") {
+                if (key_down == false) {
+                    freqs[0] = a_440 * Math.pow(factor, 8);
+                    freqs[1] = a_440 * Math.pow(factor, 10);
+                    freqs[2] = a_440 * Math.pow(factor, 12);
+                    
+                    if (muting == true) {
+                        muteButton();
+                    }
+                    key_down = true;
+                }
+            }
+            if (evt.key == "h") {
+                if (key_down == false) {
+                    freqs[0] = a_440 * Math.pow(factor, 10);
+                    freqs[1] = a_440 * Math.pow(factor, 12);
+                    freqs[2] = a_440 * Math.pow(factor, 14);
+                    
+                    if (muting == true) {
+                        muteButton();
+                    }
+                    key_down = true;
+                }
+            }
+            if (evt.key == "j") {
+                if (key_down == false) {
+                    freqs[0] = a_440 * Math.pow(factor, 12);
+                    freqs[1] = a_440 * Math.pow(factor, 14);
+                    freqs[2] = a_440 * Math.pow(factor, 16);
+                    
+                    if (muting == true) {
+                        muteButton();
+                    }
+                    key_down = true;
+                }
+            }
+
+            // lower octave
+            if (evt.key == "z") {
+                if (key_down == false) {
+                    freqs[0] = a_440 * Math.pow(factor, -14);
+                    freqs[1] = a_440 * Math.pow(factor, -12);
+                    freqs[2] = a_440 * Math.pow(factor, -10);
+
+                    if (muting == true)
+                    {
+                        muteButton();
+                    }
+                    key_down = true;
+                }
+            }
+            if (evt.key == "x") {
+                if (key_down == false) {
+                    freqs[0] = a_440 * Math.pow(factor, -12);
+                    freqs[1] = a_440 * Math.pow(factor, -10);
+                    freqs[2] = a_440 * Math.pow(factor, -8);
+
+                    if (muting == true) {
+                        muteButton();
+                    }
+                    key_down = true;
+                }
+            }
+            if (evt.key == "c") {
+                if (key_down == false) {
+                    freqs[0] = a_440 * Math.pow(factor, -10);
+                    freqs[1] = a_440 * Math.pow(factor, -8);
+                    freqs[2] = a_440 * Math.pow(factor, -6);
+                    
+                    if (muting == true) {
+                        muteButton();
+                    }
+                    key_down = true;
+                }
+            }
+            if (evt.key == "v") {
+                if (key_down == false) {
+                    freqs[0] = a_440 * Math.pow(factor, -8);
+                    freqs[1] = a_440 * Math.pow(factor, -6);
+                    freqs[2] = a_440 * Math.pow(factor, -4);
+                    
+                    if (muting == true) {
+                        muteButton();
+                    }
+                    key_down = true;
+                }
+            }
+            if (evt.key == "b") {
+                if (key_down == false) {
+                    freqs[0] = a_440 * Math.pow(factor, -6);
+                    freqs[1] = a_440 * Math.pow(factor, -4);
+                    freqs[2] = a_440 * Math.pow(factor, -2);
+                    
+                    if (muting == true) {
+                        muteButton();
+                    }
+                    key_down = true;
+                }
+            }
+            if (evt.key == "n") {
+                if (key_down == false) {
+                    freqs[0] = a_440 * Math.pow(factor, -4);
+                    freqs[1] = a_440 * Math.pow(factor, -2);
+                    freqs[2] = a_440 * Math.pow(factor, 0);
+                    
+                    if (muting == true) {
+                        muteButton();
+                    }
+                    key_down = true;
+                }
+            }
+            if (evt.key == "m") {
+                if (key_down == false) {
+                    freqs[0] = a_440 * Math.pow(factor, -2);
+                    freqs[1] = a_440 * Math.pow(factor, 0);
+                    freqs[2] = a_440 * Math.pow(factor, 2);
+                    
+                    if (muting == true) {
+                        muteButton();
+                    }
+                    key_down = true;
+                }
+            }
+
+            // upper octave
+            if (evt.key == "q") {
+                if (key_down == false) {
+                    freqs[0] = a_440 * Math.pow(factor, 14);
+                    freqs[1] = a_440 * Math.pow(factor, 16);
+                    freqs[2] = a_440 * Math.pow(factor, 18);
+
+                    if (muting == true)
+                    {
+                        muteButton();
+                    }
+                    key_down = true;
+                }
+            }
+            if (evt.key == "w") {
+                if (key_down == false) {
+                    freqs[0] = a_440 * Math.pow(factor, 16);
+                    freqs[1] = a_440 * Math.pow(factor, 18);
+                    freqs[2] = a_440 * Math.pow(factor, 20);
+
+                    if (muting == true) {
+                        muteButton();
+                    }
+                    key_down = true;
+                }
+            }
+            if (evt.key == "e") {
+                if (key_down == false) {
+                    freqs[0] = a_440 * Math.pow(factor, 18);
+                    freqs[1] = a_440 * Math.pow(factor, 20);
+                    freqs[2] = a_440 * Math.pow(factor, 22);
+                    
+                    if (muting == true) {
+                        muteButton();
+                    }
+                    key_down = true;
+                }
+            }
+            if (evt.key == "r") {
+                if (key_down == false) {
+                    freqs[0] = a_440 * Math.pow(factor, 20);
+                    freqs[1] = a_440 * Math.pow(factor, 22);
+                    freqs[2] = a_440 * Math.pow(factor, 24);
+                    
+                    if (muting == true) {
+                        muteButton();
+                    }
+                    key_down = true;
+                }
+            }
+            if (evt.key == "t") {
+                if (key_down == false) {
+                    freqs[0] = a_440 * Math.pow(factor, 22);
+                    freqs[1] = a_440 * Math.pow(factor, 24);
+                    freqs[2] = a_440 * Math.pow(factor, 26);
+                    
+                    if (muting == true) {
+                        muteButton();
+                    }
+                    key_down = true;
+                }
+            }
+            if (evt.key == "y") {
+                if (key_down == false) {
+                    freqs[0] = a_440 * Math.pow(factor, 24);
+                    freqs[1] = a_440 * Math.pow(factor, 26);
+                    freqs[2] = a_440 * Math.pow(factor, 28);
+                    
+                    if (muting == true) {
+                        muteButton();
+                    }
+                    key_down = true;
+                }
+            }
+            if (evt.key == "u") {
+                if (key_down == false) {
+                    freqs[0] = a_440 * Math.pow(factor, 26);
+                    freqs[1] = a_440 * Math.pow(factor, 28);
+                    freqs[2] = a_440 * Math.pow(factor, 30);
+                    
+                    if (muting == true) {
+                        muteButton();
+                    }
+                    key_down = true;
+                }
+            }
+
+        })
+
+        window.addEventListener("keyup", evt => {
+            if (evt.key == "a") {
+                muteButton();
+                key_down = false;
+    
+            }
+            if (evt.key == "s") {
+                muteButton();
+                key_down = false;
+            }
+            if (evt.key == "d") {
+                muteButton();
+                key_down = false;        
+            }
+            if (evt.key == "f") {
+                muteButton();
+                key_down = false;
+            }
+            if (evt.key == "g") {
+                muteButton();
+                key_down = false;        
+            }
+            if (evt.key == "h") {
+                muteButton();
+                key_down = false;
+            }
+            if (evt.key == "j") {
+                muteButton();
+                key_down = false;        
+            }
+
+
+            if (evt.key == "z") {
+                muteButton();
+                key_down = false;
+            }
+            if (evt.key == "x") {
+                muteButton();
+                key_down = false;
+            }
+            if (evt.key == "c") {
+                muteButton();
+                key_down = false;        
+            }
+            if (evt.key == "v") {
+                muteButton();
+                key_down = false;
+            }
+            if (evt.key == "b") {
+                muteButton();
+                key_down = false;        
+            }
+            if (evt.key == "n") {
+                muteButton();
+                key_down = false;
+            }
+            if (evt.key == "m") {
+                muteButton();
+                key_down = false;        
+            }
+
+            if (evt.key == "q") {
+                muteButton();
+                key_down = false;
+    
+            }
+            if (evt.key == "w") {
+                muteButton();
+                key_down = false;
+            }
+            if (evt.key == "e") {
+                muteButton();
+                key_down = false;        
+            }
+            if (evt.key == "r") {
+                muteButton();
+                key_down = false;
+            }
+            if (evt.key == "t") {
+                muteButton();
+                key_down = false;        
+            }
+            if (evt.key == "y") {
+                muteButton();
+                key_down = false;
+            }
+            if (evt.key == "u") {
+                muteButton();
+                key_down = false;        
+            }
+
+        })
+
+
+        
+        //// Boiler plate
+        
+        script_processor.onaudioprocess = function(audioProcessingEvent)
+        {
+            getBuffer(audioProcessingEvent.outputBuffer);
+        }
+
+        function onUserWantsToStart()
+        {
+            buffer_source.connect(script_processor);
+            script_processor.connect(audio_cont.destination)
+            buffer_source.start();
+
+        }
+
+        function getBuffer(outputBuffer)
+        {
+            var output_data = outputBuffer.getChannelData(0);
+            var sampleRate = outputBuffer.sampleRate;
+            for (var i = 0; i < outputBuffer.length; i++)
+            {
+                samples = [0, 0, 0];
+                for (var j = 0; j < num_channels; j++) {
+                    freq = freqs[j];
+                    samples[j] = getSample(sampleRate, j, freq);
+                }
+                output_data[i] = sumSamples(samples);
+            }
+
+        }
+
+        function sumSamples(sample_list) {
+            sum = 0;
+            for (var i = 0; i < samples.length; i++) {
+                sum += sample_list[i];
+            }
+            return sum;
+        }
+
+        /////// SYNTHESIS
+        ///
+
+        
+
+        function getSample(sampleRate, phi_ind, freq)
+        {
+            // update to support multiple wave options
+            const type = wavePicker.options[wavePicker.selectedIndex].value;
+
+            if (target_amplitude > current_amplitude)
+            {
+                current_amplitude += attack;
+            }
+            else if (target_amplitude < current_amplitude)
+            {
+                current_amplitude -= decay;
+            }
+
+            // decide which waveform to generate
+            switch(type)
+            {
+                case "sine":
+                    var sample = sinWave(sampleRate, phi_ind, freq);
+                    break;
+                case "square":
+                    var sample = squareWave(sampleRate, phi_ind, freq);
+                    break;
+                case "triangle":
+                    var sample = triWave(sampleRate, phi_ind, freq);
+                    break;
+                case "sawtooth":
+                    var sample = sawWave(sampleRate, phi_ind, freq);
+                    break;
+            }
+            
+            return sample;
+        }
+
+        // wave function generators
+        function sinWave(sampleRate, phi_ind, freq)
+        {
+            var delta = freq * 2 * Math.PI / sampleRate;
+            phis[phi_ind] += delta;
+            var sample = current_amplitude * Math.sin(phis[phi_ind]);
+            return sample;
+        }
+        function squareWave(sampleRate, phi_ind, freq)
+        {
+            var delta = freq * 2 * Math.PI / sampleRate;
+            phis[phi_ind] += delta;
+            var sample = current_amplitude * Math.sign(Math.sin(phis[phi_ind]));
+            return sample;
+        }
+        function sawWave(sampleRate, phi_ind, freq)
+        {
+            delta = freq * Math.PI / sampleRate;
+            phis[phi_ind] += delta;
+            sample = current_amplitude * -2 / Math.PI * Math.atan(1 / Math.tan(phis[phi_ind]))
+            return sample;
+
+        }
+        function triWave(sampleRate, phi_ind, freq)
+        {
+            delta = freq * 2 * Math.PI / sampleRate;
+            phis[phi_ind] += delta
+            sample = current_amplitude * 2 / Math.PI * Math.asin(Math.sin(phis[phi_ind]))
+            return sample
+        }
+
+        // single muteButton function to handle both mute and unmute
+        function muteButton()
+        {
+            if (muting == false)
+            {
+                muting = true;
+                mute();
+            }
+            else
+            {
+                muting = false;
+                unmute();
+            }
+        }
+        function mute()
+        {
+            target_amplitude = 0.0;
+        }
+        function unmute()
+        {
+            target_amplitude = 0.1;
+        }
+
+    </script>
+</head>
+<body>
+    <h2>Whole Tone Triads</h2>
+    <h2><a href="JavaScript:onUserWantsToStart();">START SYNTHESIS</a></h2>
+    <pre style="font-size: 14px">Click START SYNTHESIS or press any key to begin. Keys will play whole tone scale triads 
+    (triads are three consecutive notes as opposed to the classic triad). <br><br>
+        [Z] - [M] - lower octave <br>
+        [A] - [J] - middle octave <br>
+        [Q] - [U] - upper octave <br>
+    </pre>
+    <h4><a href='audio_synthesis.html'>back</a></h4>
+</body>
+</html>

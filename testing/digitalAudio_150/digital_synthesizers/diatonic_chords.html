@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html>
+    <div class="right">
+        <span>Current Waveform: </span>
+        <select name="Waveform">
+            <option value="sine">Sine</option>
+            <option value="square">Square</option>
+            <option value="sawtooth">Sawtooth</option>
+            <option value="triangle" selected>Triangle</option>
+        </select>
+    </div>
+    <div class="temperment">
+        <span>Current Temperment: </span>
+        <select name="Temperment">
+            <option value="Equal" selectedS>Equal</option>
+            <option value="Just">Just intonation</option>
+        </select>
+    </div>
+    <div class="chords">
+        <span>Chord type: </span>
+        <select name="Chord_type">
+            <option value="Triads" selected>Triads</option>
+            <option value="Sevenths">Sevenths</option>
+        </select>
+    </div>
+    <div class="key">
+        <span>Chord type: </span>
+        <select name="Key">
+            <option value="A" selected>A</option>
+            <option value="A#">A#</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="C#">C#</option>
+            <option value="D">D</option>
+            <option value="D#">D#</option>
+            <option value="E">E</option>
+            <option value="F">F</option>
+            <option value="F#">F#</option>
+            <option value="G">G</option>
+            <option value="G#">G#</option>
+
+        </select>
+    </div>
+    
+<head>
+    <script>
+        var audio_cont = new AudioContext();
+        var buffer_source = audio_cont.createBufferSource();
+        var script_processor = audio_cont.createScriptProcessor(4096, 0, 1);
+        
+        const wavePicker = document.querySelector("select[name='Waveform']");
+        const tempPicker = document.querySelector("select[name='Temperment']");
+        const chordPicker = document.querySelector("select[name='Chord_type']");
+        const keyPicker = document.querySelector("select[name='Key']");
+
+        var phis = [0, 0, 0, 0];
+        var freqs = [0, 0, 0, 0];
+
+        var a_440 = 440;
+        var key_center = a_440;
+        var current_key = "A";
+        var factor = Math.pow(2, (1/12))
+
+        muting = true;
+        started = false;
+        key_down = false;
+
+        var max_amplitude = 0.1;
+        var audioOn = false;
+
+        var current_amplitude = 0.0;
+        var target_amplitude = 0.1;
+        // var volume_shift_rate = 0.000005;    // increased from other version, test to see if higher val required'
+        var attack = 0.0001;
+        var decay = 0.000001;
+
+        // bool decides which tuning system to use
+        var Eq_temperment = true;
+        var sevenths = false;
+
+        const change_key = {}
+        change_key["A"]  = a_440;
+        change_key["A#"] = a_440 * Math.pow(factor, 1);
+        change_key["B"]  = a_440 * Math.pow(factor, 2);
+        change_key["C"]  = a_440 * Math.pow(factor, 3);
+        change_key["C#"] = a_440 * Math.pow(factor, 4);
+        change_key["D"]  = a_440 * Math.pow(factor, 5);
+        change_key["D#"] = a_440 * Math.pow(factor, 6);
+        change_key["E"]  = a_440 * Math.pow(factor, 7);
+        change_key["F"]  = a_440 * Math.pow(factor, 8);
+        change_key["F#"] = a_440 * Math.pow(factor, 9);
+        change_key["G"]  = a_440 * Math.pow(factor, 10);
+        change_key["G#"] = a_440 * Math.pow(factor, 11);
+
+        // equal temperment
+        var A_nat = key_center * Math.pow(factor, 0);
+        var B_nat = key_center * Math.pow(factor, 2);
+        var C_sharp = key_center * Math.pow(factor, 4);
+        var D_nat = key_center * Math.pow(factor, 5);
+        var E_nat = key_center * Math.pow(factor, 7);
+        var F_sharp = key_center * Math.pow(factor, 9);
+        var G_sharp = key_center * Math.pow(factor, 11);
+
+        // just intonation
+        var B_j = key_center * 9 / 8;
+        var C_j = key_center * 5 / 4;
+        var D_j = key_center * 4 / 3;
+        var E_j = key_center * 3 / 2;
+        var F_j = key_center * 5 / 3;
+        var G_j = key_center * 15 / 8;
+
+        
+
+
+        // whole tone chords
+        window.addEventListener("keydown", evt => {
+            if (started == false) {
+                    started = true;
+                    onUserWantsToStart();
+            }
+            else if (Eq_temperment == false) {
+                if (evt.key == "a") {
+                    if (key_down == false) {
+                        // A major: A C# E
+                        freqs[0] = A_nat;
+                        freqs[1] = C_j;
+                        freqs[2] = E_j;
+                        // maj7: G#
+                        if (sevenths == true) {
+                            freqs[3] = G_j;
+                        }
+                        else {
+                            freqs[3] = 0;
+                        }
+
+                        if (muting == true)
+                        {
+                            muteButton();
+                        }
+                        key_down = true;
+                    }
+                }
+                if (evt.key == "s") {
+                    if (key_down == false) {
+                        // B minor: B D F#
+                        freqs[0] = B_j;
+                        freqs[1] = D_j;
+                        freqs[2] = F_j;
+                        // min7: A
+                        if (sevenths == true) {
+                            freqs[3] = A_nat * 2;
+                        }
+                        else {
+                            freqs[3] = 0;
+                        }
+
+
+                        if (muting == true) {
+                            muteButton();
+                        }
+                        key_down = true;
+                    }
+                }
+                if (evt.key == "d") {
+                    if (key_down == false) {
+                        // C# minor: C# E G#
+                        freqs[0] = C_j;
+                        freqs[1] = E_j;
+                        freqs[2] = G_j;
+                        // min7: B
+                        if (sevenths == true) {
+                            freqs[3] = B_j * 2;
+                        }
+                        else {
+                            freqs[3] = 0;
+                        }
+
+                    
+                        if (muting == true) {
+                            muteButton();
+                        }
+                        key_down = true;
+                    }
+                }
+                if (evt.key == "f") {
+                    if (key_down == false) {
+                        // D major: D F# A
+                        freqs[0] = D_j;
+                        freqs[1] = F_j;
+                        freqs[2] = A_nat * 2;
+                        // maj7: C#
+                        if (sevenths == true) {
+                            freqs[3] = C_j * 2;
+                        }
+                        else {
+                            freqs[3] = 0;
+                        }
+
+                        if (muting == true) {
+                            muteButton();
+                        }
+                        key_down = true;
+                    }
+                }
+                if (evt.key == "g") {
+                    if (key_down == false) {
+                        // E major: E G# B
+                        freqs[0] = E_j;
+                        freqs[1] = G_j;
+                        freqs[2] = B_j * 2;
+                        // V7 : D
+                        if (sevenths == true) {
+                            freqs[3] = D_j * 2;
+                        }
+                        else {
+                            freqs[3] = 0;
+                        }
+                    
+                        if (muting == true) {
+                            muteButton();
+                        }
+                        key_down = true;
+                    }
+                }
+                if (evt.key == "h") {
+                    if (key_down == false) {
+                        // F# minor: F# A C#
+                        freqs[0] = F_j;
+                        freqs[1] = A_nat * 2;
+                        freqs[2] = C_j * 2;
+                        // min7: E
+                        if (sevenths == true) {
+                            freqs[3] = E_j * 2;
+                        }
+                        else {
+                            freqs[3] = 0;
+                        }
+                    
+                        if (muting == true) {
+                            muteButton();
+                        }
+                        key_down = true;
+                    }
+                }
+                if (evt.key == "j") {
+                    if (key_down == false) {
+                        // G# dim: G# B D
+                        freqs[0] = G_j;
+                        freqs[1] = B_j * 2;
+                        freqs[2] = D_j * 2;
+                        // dim7: F#
+                        if (sevenths == true) {
+                            freqs[3] = F_j * 2;
+                        }
+                        else {
+                            freqs[3] = 0;
+                        }
+                    
+                        if (muting == true) {
+                            muteButton();
+                        }
+                        key_down = true;
+                    }
+                }
+                if (evt.key == "k") {
+                    if (key_down == false) {
+                        // A maj: A C# E
+                        freqs[0] = A_nat * 2;
+                        freqs[1] = C_j * 2;
+                        freqs[2] = E_j * 2;
+                        // maj7:
+                        if (sevenths == true) {
+                            freqs[3] = G_j * 2;
+                        }
+                        else {
+                            freqs[3] = 0;
+                        }
+                    
+                        if (muting == true) {
+                            muteButton();
+                        } 
+                        key_down = true;
+                    }
+                }
+            }
+            else {
+                if (evt.key == "a") {
+                    if (key_down == false) {
+                        freqs = [0, 0, 0, 0]
+
+                        // A major: A C# E
+                        freqs[0] = A_nat;
+                        freqs[1] = C_sharp;
+                        freqs[2] = E_nat;
+                        if (sevenths == true) {
+                            freqs[3] = G_sharp;
+                        }
+
+                        if (muting == true)
+                        {
+                            muteButton();
+                        }
+                        key_down = true;
+                    }
+                }
+                if (evt.key == "s") {
+                    if (key_down == false) {
+                        freqs = [0, 0, 0, 0]
+
+                        // B minor: B D F#
+                        freqs[0] = B_nat;
+                        freqs[1] = D_nat;
+                        freqs[2] = F_sharp;
+                        if (sevenths == true) {
+                            freqs[3] = A_nat * 2;
+                        }
+
+                        if (muting == true) {
+                            muteButton();
+                        }
+                        key_down = true;
+                    }
+                }
+                if (evt.key == "d") {
+                    if (key_down == false) {
+                        freqs = [0, 0, 0, 0]
+
+                        // C# minor: C# E G#
+                        freqs[0] = C_sharp;
+                        freqs[1] = E_nat;
+                        freqs[2] = G_sharp;
+                        if (sevenths == true) {
+                            freqs[3] = B_nat * 2;
+                        }
+                    
+                        if (muting == true) {
+                            muteButton();
+                        }
+                        key_down = true;
+                    }
+                }
+                if (evt.key == "f") {
+                    if (key_down == false) {
+                        freqs = [0, 0, 0, 0]
+                        // D major: D F# A
+                        freqs[0] = D_nat;
+                        freqs[1] = F_sharp;
+                        freqs[2] = A_nat * 2;
+                        if (sevenths == true) {
+                            freqs[3] = C_sharp * 2;
+                        }
+                    
+                        if (muting == true) {
+                            muteButton();
+                        }
+                        key_down = true;
+                    }
+                }
+                if (evt.key == "g") {
+                    if (key_down == false) {
+                        freqs = [0, 0, 0, 0]
+
+                        // E major: E G# B
+                        freqs[0] = E_nat;
+                        freqs[1] = G_sharp;
+                        freqs[2] = B_nat * 2;
+                        if (sevenths == true) {
+                            freqs[3] = D_nat * 2;
+                        }
+                    
+                        if (muting == true) {
+                            muteButton();
+                        }
+                        key_down = true;
+                    }
+                }
+                if (evt.key == "h") {
+                    if (key_down == false) {
+                        freqs = [0, 0, 0, 0]
+                        // F# minor: F# A C#
+                        freqs[0] = F_sharp;
+                        freqs[1] = A_nat * 2;
+                        freqs[2] = C_sharp * 2;
+                        if (sevenths == true) {
+                            freqs[3] = E_nat * 2;
+                        }
+                    
+                        if (muting == true) {
+                            muteButton();
+                        }
+                        key_down = true;
+                    }
+                }
+                if (evt.key == "j") {
+                    if (key_down == false) {
+                        freqs = [0, 0, 0, 0]
+                        // G# dim: G# B D
+                        freqs[0] = G_sharp;
+                        freqs[1] = B_nat * 2;
+                        freqs[2] = D_nat * 2;
+                        if (sevenths == true) {
+                            freqs[3] = F_sharp * 2;
+                        }
+                    
+                        if (muting == true) {
+                            muteButton();
+                        }
+                        key_down = true;
+                    }
+                }
+                if (evt.key == "k") {
+                    if (key_down == false) {
+                        freqs = [0, 0, 0, 0]
+                        // A maj: A C# E
+                        freqs[0] = A_nat * 2;
+                        freqs[1] = C_sharp * 2;
+                        freqs[2] = E_nat * 2;
+                        if (sevenths == true) {
+                            freqs[3] = G_sharp * 2;
+                        }
+                    
+                        if (muting == true) {
+                            muteButton();
+                        } 
+                        key_down = true;
+                    }
+                }
+            }
+        })
+
+        window.addEventListener("keyup", evt => {
+            if (evt.key == "a") {
+                muteButton();
+                key_down = false;
+            }
+            if (evt.key == "s") {
+                muteButton();
+                key_down = false;
+            }
+            if (evt.key == "d") {
+                muteButton();
+                key_down = false;        
+            }
+            if (evt.key == "f") {
+                muteButton();
+                key_down = false;
+            }
+            if (evt.key == "g") {
+                muteButton();
+                key_down = false;        
+            }
+            if (evt.key == "h") {
+                muteButton();
+                key_down = false;
+            }
+            if (evt.key == "j") {
+                muteButton();
+                key_down = false;        
+            }
+            if (evt.key == "k") {
+                muteButton();
+                key_down = false;        
+            }
+
+        })
+
+
+        
+        //// Boiler plate
+        
+        script_processor.onaudioprocess = function(audioProcessingEvent)
+        {
+            getBuffer(audioProcessingEvent.outputBuffer);
+        }
+
+        function onUserWantsToStart()
+        {
+            buffer_source.connect(script_processor);
+            script_processor.connect(audio_cont.destination)
+            buffer_source.start();
+
+        }
+
+        function getBuffer(outputBuffer)
+        {
+            var output_data = outputBuffer.getChannelData(0);
+            var sampleRate = outputBuffer.sampleRate;
+            for (var i = 0; i < outputBuffer.length; i++)
+            {
+                samples = [0, 0, 0, 0];
+                for (var j = 0; j < samples.length; j++) {
+                    freq = freqs[j];
+                    samples[j] = getSample(sampleRate, j, freq);
+                }
+                output_data[i] = sumSamples(samples);
+            }
+
+        }
+
+        function sumSamples(sample_list) {
+            sum = 0;
+            for (var i = 0; i < samples.length; i++) {
+                sum += sample_list[i];
+            }
+            return sum;
+        }
+
+        /////// SYNTHESIS
+        ///
+
+        
+
+        function getSample(sampleRate, phi_ind, freq)
+        {
+            // update to support multiple wave options
+            const type = wavePicker.options[wavePicker.selectedIndex].value;
+            const tuning = tempPicker.options[tempPicker.selectedIndex].value;
+            const chrd_type = chordPicker.options[chordPicker.selectedIndex].value;
+            const key = keyPicker.options[keyPicker.selectedIndex].value;
+
+            if (key != current_key) {
+                changeKey(change_key[key]);
+                current_key = key;
+            }
+            if (tuning == 'Equal'){
+                Eq_temperment = true;
+            }
+            else {
+                Eq_temperment = false;
+            }
+            if (chrd_type == 'Triads') {
+                sevenths = false;
+            }
+            else {
+                sevenths = true;
+            }
+
+            if (target_amplitude > current_amplitude)
+            {
+                current_amplitude += attack;
+            }
+            else if (target_amplitude < current_amplitude)
+            {
+                current_amplitude -= decay;
+            }
+
+            // decide which waveform to generate
+            switch(type)
+            {
+                case "sine":
+                    var sample = sinWave(sampleRate, phi_ind, freq);
+                    break;
+                case "square":
+                    var sample = squareWave(sampleRate, phi_ind, freq);
+                    break;
+                case "triangle":
+                    var sample = triWave(sampleRate, phi_ind, freq);
+                    break;
+                case "sawtooth":
+                    var sample = sawWave(sampleRate, phi_ind, freq);
+                    break;
+            }
+            
+            return sample;
+        }
+
+        function changeKey(new_key_center) {
+            key_center = new_key_center;
+
+            // equal temperment
+            A_nat = key_center * Math.pow(factor, 0);
+            B_nat = key_center * Math.pow(factor, 2);
+            C_sharp = key_center * Math.pow(factor, 4);
+            D_nat = key_center * Math.pow(factor, 5);
+            E_nat = key_center * Math.pow(factor, 7);
+            F_sharp = key_center * Math.pow(factor, 9);
+            G_sharp = key_center * Math.pow(factor, 11);
+
+            // just intonation
+            B_j = key_center * 9 / 8;
+            C_j = key_center * 5 / 4;
+            D_j = key_center * 4 / 3;
+            E_j = key_center * 3 / 2;
+            F_j = key_center * 5 / 3;
+            G_j = key_center * 15 / 8;
+        }
+
+        // wave function generators
+        function sinWave(sampleRate, phi_ind, freq)
+        {
+            var delta = freq * 2 * Math.PI / sampleRate;
+            phis[phi_ind] += delta;
+            var sample = current_amplitude * Math.sin(phis[phi_ind]);
+            return sample;
+        }
+        function squareWave(sampleRate, phi_ind, freq)
+        {
+            var delta = freq * 2 * Math.PI / sampleRate;
+            phis[phi_ind] += delta;
+            var sample = current_amplitude * Math.sign(Math.sin(phis[phi_ind]));
+            return sample;
+        }
+        function sawWave(sampleRate, phi_ind, freq)
+        {
+            delta = freq * Math.PI / sampleRate;
+            phis[phi_ind] += delta;
+            sample = current_amplitude * -2 / Math.PI * Math.atan(1 / Math.tan(phis[phi_ind]))
+            return sample;
+
+        }
+        function triWave(sampleRate, phi_ind, freq)
+        {
+            delta = freq * 2 * Math.PI / sampleRate;
+            phis[phi_ind] += delta
+            sample = current_amplitude * 2 / Math.PI * Math.asin(Math.sin(phis[phi_ind]))
+            return sample
+        }
+
+        // single muteButton function to handle both mute and unmute
+        function muteButton()
+        {
+            if (muting == false)
+            {
+                muting = true;
+                mute();
+            }
+            else
+            {
+                muting = false;
+                unmute();
+            }
+        }
+        function mute()
+        {
+            target_amplitude = 0.0;
+        }
+        function unmute()
+        {
+            target_amplitude = 0.1;
+        }
+
+    </script>
+</head>
+<body>
+    <h2>Diatonic Chords</h2>
+    <h2><a href="JavaScript:onUserWantsToStart();">START SYNTHESIS</a></h2>
+    <pre style="font-size: 14px">Click START SYNTHESIS or press any key to begin. Keys 'A' - 'K' will each play a diatonic chord a key (default: A4). 
+    Choose between equal temperment and just intonation above and experiment with different waves. Also above, toggle between triads/seventh chords and change key. <br><br>
+    Tips: <br> - sawtooth wave has a clear audible difference between equal temperment and just intonation.
+    <br> - After changing keys click on the screen to stop highlinging key selection, to avoid accedentaly changing keys. </pre>
+    <h4><a href='audio_synthesis.html'>back</a></h4>
+</body>
+</html>

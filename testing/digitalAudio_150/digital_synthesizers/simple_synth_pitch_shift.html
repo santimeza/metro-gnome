@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+    <div class="settingsBar">
+        <div class="left">
+            <span>Pitch: </span>
+            <input
+              type="range"
+              min="0.99999"
+              max="1.00001"
+              step="0.000001"
+              value="1.0"
+              list="pitches"
+              name="pitch" />
+            <datalist id="pitch">
+                <option value="0.5" label="L_oct"></option>
+                <option value="2.0" label="U_oct"></option>
+            </datalist>
+        </div>
+    </div>
+    
+    <div class="right">
+        <span>Current Waveform: </span>
+        <select name="Waveform">
+            <option value="sine">Sine</option>
+            <option value="square">Square</option>
+            <option value="sawtooth">Sawtooth</option>
+            <option value="triangle" selected>Triangle</option>
+        </select>
+    </div>
+<head>
+    <script>
+        var audio_cont = new AudioContext();
+        var buffer_source = audio_cont.createBufferSource();
+        var script_processor = audio_cont.createScriptProcessor(4096, 0, 1);
+        
+        const wavePicker = document.querySelector("select[name='Waveform']")
+        const pitchShift = document.querySelector("input[name='pitch']")
+
+        muting = false;
+        started = false;
+
+        window.addEventListener("keydown", evt => {
+            if (started == false) {
+                started = true;
+                onUserWantsToStart();
+            }
+            else if (evt.key == " ") {
+                muteButton();
+            }
+            if (evt.key == "r") {
+                pitchShift.value = 1;
+            }
+            if (evt.key == "e") {
+                pitchShift.value = pitchShift.min;
+            }
+            if (evt.key == "t") {
+                pitchShift.value = pitchShift.max;
+            }
+        })
+
+        
+        //// Boiler plate
+        
+        script_processor.onaudioprocess = function(audioProcessingEvent)
+        {
+            getBuffer(audioProcessingEvent.outputBuffer);
+        }
+
+        function onUserWantsToStart()
+        {
+            buffer_source.connect(script_processor);
+            script_processor.connect(audio_cont.destination)
+            buffer_source.start();
+            started = true;
+        }
+
+        function getBuffer(outputBuffer)
+        {
+            var output_data = outputBuffer.getChannelData(0);
+            var sampleRate = outputBuffer.sampleRate;
+            for (var i = 0; i < outputBuffer.length; i++)
+            {
+                output_data[i] = getSample(sampleRate);
+            }
+
+        }
+
+        /////// SYNTHESIS
+        ///
+
+        var max_amplitude = 0.1;
+        var freq = 440.0;
+
+        var current_amplitude = 0.0;
+        var target_amplitude = 0.1;
+        var volume_shift_rate = 0.00001;
+
+        var phi = 0;
+
+        function getSample(sampleRate)
+        {
+            // update to support multiple wave options
+            const type = wavePicker.options[wavePicker.selectedIndex].value;
+
+            var factor = pitchShift.value;
+
+            freq *= factor;
+            // cap at C2 and C8 to prevent audio issues and ear pain :)
+            if (freq <= 65.41)
+            {
+                freq = 65.41;
+            }
+            if (freq >= 2093.00)
+            {
+                freq = 2093.00;
+            }
+
+            if (target_amplitude > current_amplitude)
+            {
+                current_amplitude += volume_shift_rate;
+            }
+            else if (target_amplitude < current_amplitude)
+            {
+                current_amplitude -= volume_shift_rate;
+            }
+
+            // decide which waveform to generate
+            switch(type)
+            {
+                case "sine":
+                    var sample = sinWave(sampleRate);
+                    break;
+                case "square":
+                    var sample = squareWave(sampleRate);
+                    break;
+                case "triangle":
+                    var sample = triWave(sampleRate);
+                    break;
+                case "sawtooth":
+                    var sample = sawWave(sampleRate);
+                    break;
+                default:
+                    var sample = sawWave(sampleRate)
+            }
+            
+            return sample;
+        }
+
+        // wave function generators
+        function sinWave(sampleRate)
+        {
+            var delta = freq * 2 * Math.PI / sampleRate;
+            phi += delta;
+            var sample = current_amplitude * Math.sin(phi);
+            return sample;
+        }
+        function squareWave(sampleRate)
+        {
+            var delta = freq * 2 * Math.PI / sampleRate;
+            phi += delta;
+            var sample = current_amplitude * Math.sign(Math.sin(phi));
+            return sample;
+        }
+        function sawWave(sampleRate)
+        {
+            delta = freq * Math.PI / sampleRate;
+            phi += delta;
+            sample = current_amplitude * -2 / Math.PI * Math.atan(1 / Math.tan(phi))
+            return sample;
+
+        }
+        function triWave(sampleRate)
+        {
+            delta = freq * 2 * Math.PI / sampleRate;
+            phi += delta
+            sample = current_amplitude * 4 / Math.PI * Math.asin(Math.sin(phi))
+            return sample
+        }
+
+        // single muteButton function to handle both mute and unmute
+        function muteButton()
+        {
+            if (muting == false)
+            {
+                muting = true;
+                // on mute, reset pitch shift
+                pitchShift.value = 1.0;
+                mute();
+            }
+            else
+            {
+                muting = false;
+                unmute();
+            }
+        }
+        function mute()
+        {
+            target_amplitude = 0.0;
+        }
+        function unmute()
+        {
+            target_amplitude = 0.1;
+        }
+
+    </script>
+</head>
+<body>
+    <h1>Simple Audio Synthesizer</h1>
+    <h2><a href="JavaScript:onUserWantsToStart();">START SYNTHESIS</a></h2>
+    <h3><a href="JavaScript:muteButton();">mute</a></h3>
+    <pre style="font-size: 14px"> Press start START SYNTHESIS or press any key to begin. Spacebar can be used as mute toggle. 
+        Pressing 'R' will reset the pitch slider and sustain the note (muting will reset the pitch slider).
+        Pressing 'E' and 'T' will toggle the pitch slider to the minimum and the maximum respectively.
+    </pre>
+    <h4><a href='audio_synthesis.html'>back</a></h4>
+</body>
+</html>
