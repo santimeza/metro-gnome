@@ -1,6 +1,4 @@
 const audioContext = new AudioContext();
-
-// metronome.js
 let clickBuffers = {};
 let currentClick = 'click1';
 const soundSelect = document.getElementById('sound-select');
