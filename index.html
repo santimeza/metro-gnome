@@ -21,13 +21,18 @@
     #feedback {
       width: 100%;
       height: 100px;
-      background-color: white;
-      border: 1px solid black;
+      background-color: #8ba484;  /* green */
+      border: 3px solid black;
       margin-top: 20px;
     }
 
     #instructions {
       margin-bottom: 20px;
+    }
+
+    #bpm-display {
+      max-width: 4rem; /* Adjust the width as needed */
+      text-align: center;
     }
 
     .image-custom {
@@ -39,7 +44,7 @@
     .box {
       max-width: 400px;
       margin: 0 auto;
-      background-color: #8ba484;
+      background-color: #8ba484;  /* green */
     }
   </style>
 </head>
@@ -74,11 +79,12 @@
           <div class="field">
             <label for="bpm" class="label">BPM:</label>
             <div class="control">
-              <input type="range" id="bpm-slider" class="slider is-fullwidth is-info" min="40" max="240" value="100">
+              <input type="range" id="bpm-slider" class="slider is-fullwidth" min="40" max="240" value="100">
               <button id="bpm-decrease" class="button is-small is-info">-</button>
-              <span id="bpm-display" class="has-text-black">100</span>
+              <input class="input is-rounded is-small is-info" type="number" id="bpm-display" min="40" max="240" value="60">
               <button id="bpm-increase" class="button is-small is-info">+</button>
             </div>
+            
           </div>
 
           <div class="field">

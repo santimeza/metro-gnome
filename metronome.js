@@ -12,7 +12,7 @@ const bpmDecrease = document.getElementById('bpm-decrease');
 const bpmIncrease = document.getElementById('bpm-increase');
 let isRunning = false;
 let intervalId = null;
-let bpm = 100;
+let bpm = bpmDisplay.value;
 
 const loadClickSound = (url) => {
   return fetch(url)
@@ -69,6 +69,20 @@ soundSelect.addEventListener('change', () => {
   console.log('changing click');
 });
 
+bpmDisplay.addEventListener('input', (event) => {
+  if(event.target.value < 40)
+    bpm = 40;
+  else if(event.target.value > 240)
+    bpm = 240;
+  else
+    bpm = event.target.value;
+  
+    if (isRunning) {
+    stopMetronome();
+    startMetronome();
+  }
+});
+
 bpmSlider.addEventListener('input', (event) => {
   bpm = event.target.value;
   bpmDisplay.textContent = bpm;
@@ -117,7 +131,7 @@ const handleKeyPress = (event) => {
     }
 
     setTimeout(() => {
-      feedbackDiv.style.backgroundColor = 'white'; // Reset color
+      feedbackDiv.style.backgroundColor = '#8ba484'; // Reset color
     }, 200);
   }
 };
