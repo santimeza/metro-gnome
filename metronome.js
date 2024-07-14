@@ -74,6 +74,7 @@ bpmDisplay.addEventListener('input', (event) => {
     bpm = 240;
   else
     bpm = event.target.value;
+    bpmSlider.value = bpm;
   
     if (isRunning) {
     stopMetronome();
@@ -83,7 +84,7 @@ bpmDisplay.addEventListener('input', (event) => {
 
 bpmSlider.addEventListener('input', (event) => {
   bpm = event.target.value;
-  bpmDisplay.textContent = bpm;
+  bpmDisplay.value = bpm;
   if (isRunning) {
     stopMetronome();
     startMetronome();
@@ -118,6 +119,14 @@ const handleKeyPress = (event) => {
   if (event.code === 'Space') {
     event.preventDefault(); // Prevent default behavior
     let currentTime = audioContext.currentTime * 1000; // Convert to ms
+    let quarterNoteDuration = 60000 / bpm; // Duration of a quarter note in ms
+
+    if(document.getElementById('eighthNotes').checked) {
+      let nextEighth = lastClickTime + quarterNoteDuration / 2;
+    }
+
+
+
     let timeDiff = currentTime - lastClickTime;
 
     if (timeDiff < tolerance) {

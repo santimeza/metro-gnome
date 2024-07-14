@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Metronome</title>
+  <title>Metro-Gnome</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
   <style>
     html, body {
@@ -35,16 +35,47 @@
       text-align: center;
     }
 
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .checkbox-group label {
+      margin-bottom: 5px; /* Space between checkboxes */
+    }
+
     .image-custom {
-      width: 400px; /* Set the width to 200px */
+      width: 100%; /* Set width to 100% for responsiveness */
       height: auto; /* Maintain the aspect ratio */
-      margin-left: 50px; /* Adjust this value to shift the image to the right */
     }
 
     .box {
-      max-width: 400px;
-      margin: 0 auto;
       background-color: #8ba484;  /* green */
+    }
+
+    /* Flexbox for the columns */
+    .columns {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .column {
+      flex: 1;
+      padding: 1rem;
+      min-width: 300px; /* Ensure columns don't get too narrow */
+    }
+
+    /* Media query for smaller screens */
+    @media (max-width: 768px) {
+      .columns {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .column {
+        max-width: 100%;
+      }
     }
   </style>
 </head>
@@ -61,7 +92,7 @@
           <img src="https://santimeza.github.io/metro-gnome/imageFiles/metrognome_head.jpg" alt="Metro-gnome Image">
         </figure>
       </div>
-      <div class="column is-two-thirds">
+      <div class="column is-one-third">
         <div class="box">
           <div class="field">
             <label for="sound-select" class="label">Choose click sound:</label>
@@ -75,7 +106,6 @@
               </div>
             </div>
           </div>
-
           <div class="field">
             <label for="bpm" class="label">BPM:</label>
             <div class="control">
@@ -85,15 +115,22 @@
               <button id="bpm-increase" class="button is-small is-info">+</button>
             </div>
           </div>
-
           <div class="field">
             <div class="control">
               <button id="start-stop" class="button is-success">Start/Stop</button>
             </div>
           </div>
-          
           <div id="feedback"></div>
-          
+        </div>
+      </div>
+      <div class="column is-one-third">
+        <div class="box">
+          <div class="field">
+            <div class="checkbox-group">
+              <label><input type="checkbox" id="eighthNotes"> Eighth Notes</label>
+              <label><input type="checkbox" id="triplets"> Triplets</label>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -103,3 +140,5 @@
   <script src="metronome.js"></script>
 </body>
 </html>
+
+
