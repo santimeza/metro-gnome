@@ -120,19 +120,37 @@ const handleKeyPress = (event) => {
     event.preventDefault(); // Prevent default behavior
     let currentTime = audioContext.currentTime * 1000; // Convert to ms
     let quarterNoteDuration = 60000 / bpm; // Duration of a quarter note in ms
+    let onTime = false;
 
-    if(document.getElementById('eighthNotes').checked) {
-      let nextEighth = lastClickTime + quarterNoteDuration / 2;
+    // quarter note check
+    /// before beat
+    if(Math.abs(currentTime - lastClickTime + quarterNoteDuration) <= tolerance) {
+      onTime = true;
+    }
+    /// after beat
+    if(Math.abs(currentTime - lastClickTime) <= tolerance) {
+      onTime = true;
     }
 
+    // eighth note check
+    if(document.getElementById('eighthNotes').checked) {
+      if(Math.abs(currentTime - (lastClickTime + (quarterNoteDuration / 2))) <= tolerance) {
+        onTime = true;
+      }
+    }
 
+    // triplet check
+    if(document.getElementById('triplets').checked) {
+      if((Math.abs(currentTime - (lastClickTime + (quarterNoteDuration / 3))) < tolerance) || 
+        (Math.abs(currentTime - (lastClickTime + (2 * quarterNoteDuration / 3))) < tolerance)) {
+        onTime = true;
+      }
+    }
 
-    let timeDiff = currentTime - lastClickTime;
+    //let timeDiff = currentTime - lastClickTime;
 
-    if (timeDiff < tolerance) {
+    if (onTime == true) {
       feedbackDiv.style.backgroundColor = 'green'; // Correct timing
-    } else if (timeDiff < tolerance + 100) {
-      feedbackDiv.style.backgroundColor = 'yellow'; // Late
     } else {
       feedbackDiv.style.backgroundColor = 'red'; // Early
     }
@@ -142,6 +160,16 @@ const handleKeyPress = (event) => {
     }, 200);
   }
 };
+
+// Listen for touch events on the feedback box
+feedbackDiv.addEventListener('touchstart', (event) => {
+  handleFeedback();
+});
+
+// Optional: Prevent scrolling when touching the feedback box
+feedbackDiv.addEventListener('touchmove', (event) => {
+  event.preventDefault();
+}, { passive: false });
 
 // Stop event propagation from feedbackDiv clicks
 feedbackDiv.addEventListener('click', (event) => {
