@@ -115,50 +115,45 @@ bpmIncrease.addEventListener('click', () => {
 let lastClickTime = 0;
 let tolerance = 100; // ms tolerance for "correct" timing
 
-const handleKeyPress = (event) => {
-  if (event.code === 'Space') {
-    event.preventDefault(); // Prevent default behavior
-    let currentTime = audioContext.currentTime * 1000; // Convert to ms
-    let quarterNoteDuration = 60000 / bpm; // Duration of a quarter note in ms
-    let onTime = false;
+const handleFeedback = () => {
+  let currentTime = audioContext.currentTime * 1000; // Convert to ms
+  let quarterNoteDuration = 60000 / bpm; // Duration of a quarter note in ms
+  let onTime = false;
 
-    // quarter note check
-    /// before beat
-    if(Math.abs(currentTime - lastClickTime + quarterNoteDuration) <= tolerance) {
-      onTime = true;
-    }
-    /// after beat
-    if(Math.abs(currentTime - lastClickTime) <= tolerance) {
-      onTime = true;
-    }
-
-    // eighth note check
-    if(document.getElementById('eighthNotes').checked) {
-      if(Math.abs(currentTime - (lastClickTime + (quarterNoteDuration / 2))) <= tolerance) {
-        onTime = true;
-      }
-    }
-
-    // triplet check
-    if(document.getElementById('triplets').checked) {
-      if((Math.abs(currentTime - (lastClickTime + (quarterNoteDuration / 3))) < tolerance) || 
-        (Math.abs(currentTime - (lastClickTime + (2 * quarterNoteDuration / 3))) < tolerance)) {
-        onTime = true;
-      }
-    }
-
-    //let timeDiff = currentTime - lastClickTime;
-
-    if (onTime == true) {
-      feedbackDiv.style.backgroundColor = 'green'; // Correct timing
-    } else {
-      feedbackDiv.style.backgroundColor = 'red'; // Early
-    }
-
-    setTimeout(() => {
-      feedbackDiv.style.backgroundColor = '#8ba484'; // Reset color
-    }, 200);
+  // quarter note check
+  /// before beat
+  if(Math.abs(currentTime - lastClickTime + quarterNoteDuration) <= tolerance) {
+    onTime = true;
   }
+  /// after beat
+  if(Math.abs(currentTime - lastClickTime) <= tolerance) {
+    onTime = true;
+  }
+
+  // eighth note check
+  if(document.getElementById('eighthNotes').checked) {
+    if(Math.abs(currentTime - (lastClickTime + (quarterNoteDuration / 2))) <= tolerance) {
+      onTime = true;
+    }
+  }
+
+  // triplet check
+  if(document.getElementById('triplets').checked) {
+    if((Math.abs(currentTime - (lastClickTime + (quarterNoteDuration / 3))) < tolerance) || 
+      (Math.abs(currentTime - (lastClickTime + (2 * quarterNoteDuration / 3))) < tolerance)) {
+      onTime = true;
+    }
+  }
+
+  if (onTime == true) {
+    feedbackDiv.style.backgroundColor = 'green'; // Correct timing
+  } else {
+    feedbackDiv.style.backgroundColor = 'red'; // Early
+  }
+
+  setTimeout(() => {
+    feedbackDiv.style.backgroundColor = '#8ba484'; // Reset color
+  }, 200);
 };
 
 // Listen for touch events on the feedback box
@@ -180,7 +175,7 @@ feedbackDiv.addEventListener('click', (event) => {
 document.addEventListener('keydown', (event) => {
   if (event.code === 'Space') {
     event.preventDefault();
-    handleKeyPress(event);
+    handleFeedback();
     document.activeElement.blur(); // Remove focus from any element
   }
 });
