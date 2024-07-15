@@ -94,7 +94,7 @@ bpmSlider.addEventListener('input', (event) => {
 bpmDecrease.addEventListener('click', () => {
   bpm = Math.max(40, bpm - 1);
   bpmSlider.value = bpm;
-  bpmDisplay.textContent = bpm;
+  bpmDisplay.value = bpm;
   if (isRunning) {
     stopMetronome();
     startMetronome();
@@ -104,7 +104,7 @@ bpmDecrease.addEventListener('click', () => {
 bpmIncrease.addEventListener('click', () => {
   bpm = Math.min(240, bpm + 1);
   bpmSlider.value = bpm;
-  bpmDisplay.textContent = bpm;
+  bpmDisplay.value = bpm;
   if (isRunning) {
     stopMetronome();
     startMetronome();
