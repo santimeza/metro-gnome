@@ -10,7 +10,7 @@ const bpmDecrease = document.getElementById('bpm-decrease');
 const bpmIncrease = document.getElementById('bpm-increase');
 let isRunning = false;
 let intervalId = null;
-let bpm = bpmDisplay.value;
+let bpm = 60; //bpmDisplay.value;
 
 const loadClickSound = (url) => {
   return fetch(url)

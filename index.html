@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Metro-Gnome</title>
+  <link rel="icon" href="https://github.com/santimeza/metro-gnome/blob/main/imageFiles/gnome-favicon4.jpg?raw=true  " type="image/png">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
   <style>
     html, body {
@@ -19,6 +20,11 @@
       margin-top: 50px;
     }
 
+    #about {
+      margin-left: 50px;
+      margin-bottom: 40px;
+    }
+
     #feedback {
       width: 100%;
       height: 100px;
@@ -29,6 +35,11 @@
 
     #instructions {
       margin-bottom: 20px;
+    }
+
+    #info-box {
+      margin-left: 40px;
+      margin-right: 40px;
     }
 
     #bpm-display {
@@ -82,12 +93,16 @@
 </head>
 <body>
   <div class="container">
-    <h1 class="title has-text-centered"><strong>Metro-gnome</strong></h1>
-    <p id="instructions" class="has-text-centered">Select a click sound, adjust BPM, and click Start to begin the metronome.
-       For timing feedback, click the space bar on every beat.<br>The white rectangle will flash red if you are rushing or dragging 
-       and green if your timing is correct. <br>Click the checkboxes on the right to allow the feedback box to take into account eight notes
-       and eight note triplets.<br>(Metro-Gnome counts quarter notes)</p>
-
+    <div class="box" id="info-box">
+      <div class="content">
+        <h1 class="title has-text-centered is-size-2"><strong>Metro-gnome</strong></h1>
+        <p id="instructions" class="has-text-justified">Select a click sound, adjust BPM, and click Start to begin the metronome.
+           For timing feedback, click the space bar on every beat, or tap the box for mobile. The white rectangle will flash red if you 
+           are rushing or dragging and green if your timing is correct. Click the checkboxes on the right to allow the feedback box to take 
+           into account eighth notes and eighth note triplets. (Metro-Gnome counts quarter notes)
+        </p>
+      </div>
+    </div>
     <div class="columns is-vcentered">
       <div class="column is-one-third">
         <figure class="image image-custom">
@@ -111,7 +126,7 @@
           <div class="field">
             <label for="bpm" class="label">BPM:</label>
             <div class="control">
-              <input type="range" id="bpm-slider" class="slider is-fullwidth" min="40" max="240" value="100">
+              <input type="range" id="bpm-slider" class="slider is-fullwidth" min="40" max="240" value="60">
               <button id="bpm-decrease" class="button is-small is-info">-</button>
               <input class="input is-rounded is-small is-info" type="number" id="bpm-display" min="40" max="240" value="60">
               <button id="bpm-increase" class="button is-small is-info">+</button>
@@ -122,6 +137,7 @@
               <button id="start-stop" class="button is-success">Start/Stop</button>
             </div>
             <div id="feedback"></div>
+          </div>
         </div>
       </div>
       <div class="column is-one-third">
@@ -134,8 +150,9 @@
           </div>
         </div>
       </div>
+
     </div>
-    <a href="about.html" class="button is-link">About</a>
+    <a href="about.html" class="button is-link" id="about">About</a>
   </div>
 
   <script src="metronome.js"></script>

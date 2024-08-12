@@ -5,8 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MIDI Synth</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.1/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
+<style>
+  html, body {
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    height: 100%;
+  }
+
+  .container {
+    margin-top: 50px;
+    margin-left: 20px;
+
+  }
+</style>
 <body>
+  <div class="container">
+    <div class="column is-one-third">
+      <button class="button is-danger" id="pwr-button">
+        <span class="icon">
+          <i class="fa fa-power-off"></i>
+        </span>
+      </button>
+    </div>
+  </div>
+  <script src="http://unpkg.com/tone"></script>
   <script src="synth.js"></script>
 </body>
 </html>

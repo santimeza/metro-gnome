@@ -46,3 +46,15 @@ function startLoggingMIDIInput(midiAccess) {
     entry.onmidimessage = onMIDIMessage;
   });
 }
+
+//create a synth and connect it to the main output (your speakers)
+pwrButton = document.getElementById("pwr-button");
+const synth = new Tone.Synth().toDestination();
+
+//play a middle 'C' for the duration of an 8th note
+pwrButton.addEventListener("click", () => {
+  if (Tone.context.state != "running") {
+    Tone.start();
+  } 
+  synth.triggerAttackRelease("C4", "8n");
+});
