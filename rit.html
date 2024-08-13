@@ -6,90 +6,6 @@
   <title>Metro-Gnome</title>
   <link rel="icon" href="https://github.com/santimeza/metro-gnome/blob/main/imageFiles/gnome-favicon4.jpg?raw=true  " type="image/png">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-  <style>
-    html, body {
-      font-family: Georgia, 'Times New Roman', Times, serif;
-      background-color: #b6b48e; /* Cream color */
-      margin: 0; /* Remove default margin */
-      padding: 0; /* Remove default padding */
-      height: 100%;
-      touch-action: manipulation;
-    }
-
-    .container {
-      margin-top: 50px;
-    }
-
-    #about {
-      margin-left: 50px;
-      margin-bottom: 40px;
-    }
-
-    #feedback {
-      width: 100%;
-      height: 100px;
-      background-color: #8ba484;  /* green */
-      border: 3px solid black;
-      margin-top: 20px;
-    }
-
-    #instructions {
-      margin-bottom: 20px;
-    }
-
-    #info-box {
-      margin-left: 40px;
-      margin-right: 40px;
-    }
-
-    #bpm-display {
-      max-width: 4rem; /* Adjust the width as needed */
-      text-align: center;
-    }
-
-    .checkbox-group {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .checkbox-group label {
-      margin-bottom: 5px; /* Space between checkboxes */
-    }
-
-    .image-custom {
-      width: 100%; /* Set width to 100% for responsiveness */
-      height: auto; /* Maintain the aspect ratio */
-    }
-
-    .box {
-      background-color: #8ba484;  /* green */
-    }
-
-    /* Flexbox for the columns */
-    .columns {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-    }
-
-    .column {
-      flex: 1;
-      padding: 1rem;
-      min-width: 300px; /* Ensure columns don't get too narrow */
-    }
-
-    /* Media query for smaller screens */
-    @media (max-width: 768px) {
-      .columns {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .column {
-        max-width: 100%;
-      }
-    }
-  </style>
 </head>
 <body>
   <div class="container">
@@ -104,11 +20,6 @@
       </div>
     </div>
     <div class="columns is-vcentered">
-      <div class="column is-one-third">
-        <figure class="image image-custom">
-          <img src="https://santimeza.github.io/metro-gnome/imageFiles/metrognome_head.jpg" alt="Metro-gnome Image">
-        </figure>
-      </div>
       <div class="column is-one-third">
         <div class="box">
           <div class="field">
@@ -151,10 +62,15 @@
         </div>
         <div class="box">
           <div class="field">
-            Want to practice ritardando?     
+            Back to Metro-Gnome   
           </div>
-          <a href="rit.html" class="button is-danger" id="slow-down">Go</a>
+          <a href="index.html" class="button is-info" id="metro">Back</a>
         </div>
+      </div>
+      <div class="column is-one-third">
+        <figure class="image image-custom">
+          <img src="https://santimeza.github.io/metro-gnome/imageFiles/metrognome_head.jpg" alt="Metro-gnome Image">
+        </figure>
       </div>
 
     </div>
