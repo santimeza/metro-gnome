@@ -1,168 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Metro-Gnome</title>
-  <link rel="icon" href="https://github.com/santimeza/metro-gnome/blob/main/imageFiles/gnome-favicon4.jpg?raw=true  " type="image/png">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-  <style>
-    html, body {
-      font-family: Georgia, 'Times New Roman', Times, serif;
-      background-color: #b6b48e; /* Cream color */
-      margin: 0; /* Remove default margin */
-      padding: 0; /* Remove default padding */
-      height: 100%;
-      touch-action: manipulation;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Metro-Gnome</title>
+    <link
+      rel="icon"
+      href="https://github.com/santimeza/metro-gnome/blob/main/imageFiles/gnome-favicon4.jpg?raw=true  "
+      type="image/png"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"
+    />
+    <style>
+      html,
+      body {
+        font-family: Georgia, "Times New Roman", Times, serif;
+        background-color: #b6b48e; /* Cream color */
+        margin: 0; /* Remove default margin */
+        padding: 0; /* Remove default padding */
+        height: 100%;
+        touch-action: manipulation;
+      }
 
-    .container {
-      margin-top: 50px;
-    }
+      .container {
+        margin-top: 50px;
+      }
 
-    #about {
-      margin-left: 50px;
-      margin-bottom: 40px;
-    }
+      #about {
+        margin-left: 50px;
+        margin-bottom: 40px;
+      }
 
-    #feedback {
-      width: 100%;
-      height: 100px;
-      background-color: #8ba484;  /* green */
-      border: 3px solid black;
-      margin-top: 20px;
-    }
+      #feedback {
+        width: 100%;
+        height: 100px;
+        background-color: #8ba484; /* green */
+        border: 3px solid black;
+        margin-top: 20px;
+      }
 
-    #instructions {
-      margin-bottom: 20px;
-    }
+      #instructions {
+        margin-bottom: 20px;
+      }
 
-    #info-box {
-      margin-left: 40px;
-      margin-right: 40px;
-    }
+      #info-box {
+        margin-left: 40px;
+        margin-right: 40px;
+      }
 
-    #bpm-display {
-      max-width: 4rem; /* Adjust the width as needed */
-      text-align: center;
-    }
+      #bpm-display {
+        max-width: 4rem; /* Adjust the width as needed */
+        text-align: center;
+      }
 
-    .checkbox-group {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .checkbox-group label {
-      margin-bottom: 5px; /* Space between checkboxes */
-    }
-
-    .image-custom {
-      width: 100%; /* Set width to 100% for responsiveness */
-      height: auto; /* Maintain the aspect ratio */
-    }
-
-    .box {
-      background-color: #8ba484;  /* green */
-    }
-
-    /* Flexbox for the columns */
-    .columns {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-    }
-
-    .column {
-      flex: 1;
-      padding: 1rem;
-      min-width: 300px; /* Ensure columns don't get too narrow */
-    }
-
-    /* Media query for smaller screens */
-    @media (max-width: 768px) {
-      .columns {
+      .checkbox-group {
+        display: flex;
         flex-direction: column;
-        align-items: center;
+      }
+
+      .checkbox-group label {
+        margin-bottom: 5px; /* Space between checkboxes */
+      }
+
+      .image-custom {
+        width: 100%; /* Set width to 100% for responsiveness */
+        height: auto; /* Maintain the aspect ratio */
+      }
+
+      .box {
+        background-color: #8ba484; /* green */
+      }
+
+      /* Flexbox for the columns */
+      .columns {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
       }
 
       .column {
-        max-width: 100%;
+        flex: 1;
+        padding: 1rem;
+        min-width: 300px; /* Ensure columns don't get too narrow */
       }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="box" id="info-box">
-      <div class="content">
-        <h1 class="title has-text-centered is-size-2"><strong>Metro-gnome</strong></h1>
-        <p id="instructions" class="has-text-justified">Select a click sound, adjust BPM, and click Start to begin the metronome.
-           For timing feedback, click the space bar on every beat, or tap the box for mobile. The white rectangle will flash red if you 
-           are rushing or dragging and green if your timing is correct. Click the checkboxes on the right to allow the feedback box to take 
-           into account eighth notes and eighth note triplets. (Metro-Gnome counts quarter notes)
-        </p>
+
+      /* Media query for smaller screens */
+      @media (max-width: 768px) {
+        .columns {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .column {
+          max-width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="box" id="info-box">
+        <div class="content">
+          <h1 class="title has-text-centered is-size-2">
+            <strong>Metro-gnome</strong>
+          </h1>
+          <p id="instructions" class="has-text-justified">
+            Select a click sound, adjust BPM, and click Start to begin the
+            metronome. For timing feedback, click the space bar on every beat,
+            or tap the box for mobile. The white rectangle will flash red if you
+            are rushing or dragging and green if your timing is correct. Click
+            the checkboxes on the right to allow the feedback box to take into
+            account eighth notes and eighth note triplets. (Metro-Gnome counts
+            quarter notes)
+          </p>
+        </div>
       </div>
-    </div>
-    <div class="columns is-vcentered">
-      <div class="column is-one-third">
-        <figure class="image image-custom">
-          <img src="https://santimeza.github.io/metro-gnome/imageFiles/metrognome_head.jpg" alt="Metro-gnome Image">
-        </figure>
-      </div>
-      <div class="column is-one-third">
-        <div class="box">
-          <div class="field">
-            <label for="sound-select" class="label">Choose click sound:</label>
-            <div class="control">
-              <div class="select">
-                <select id="sound-select" class="is-info">
-                  <option value="click1">Click 1</option>
-                  <option value="click2">Click 2</option>
-                  <option value="click3">Click 3</option>
-                </select>
+      <div class="columns is-vcentered">
+        <div class="column is-one-third">
+          <figure class="image image-custom">
+            <img
+              src="https://santimeza.github.io/metro-gnome/imageFiles/metrognome_head.jpg"
+              alt="Metro-gnome Image"
+            />
+          </figure>
+        </div>
+        <div class="column is-one-third">
+          <div class="box">
+            <div class="field">
+              <label for="sound-select" class="label"
+                >Choose click sound:</label
+              >
+              <div class="control">
+                <div class="select">
+                  <select id="sound-select" class="is-info">
+                    <option value="click1">Click 1</option>
+                    <option value="click2">Click 2</option>
+                    <option value="click3">Click 3</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label for="bpm" class="label">BPM:</label>
+              <div class="control">
+                <input
+                  type="range"
+                  id="bpm-slider"
+                  class="slider is-fullwidth"
+                  min="40"
+                  max="240"
+                  value="60"
+                />
+                <button id="bpm-decrease" class="button is-small is-info">
+                  -
+                </button>
+                <input
+                  class="input is-rounded is-small is-info"
+                  type="number"
+                  id="bpm-display"
+                  min="40"
+                  max="240"
+                  value="60"
+                />
+                <button id="bpm-increase" class="button is-small is-info">
+                  +
+                </button>
+              </div>
+            </div>
+            <div class="field">
+              <div class="control">
+                <button id="start-stop" class="button is-success">
+                  Start/Stop
+                </button>
+              </div>
+              <div id="feedback"></div>
+            </div>
+          </div>
+        </div>
+        <div class="column is-one-third">
+          <div class="box">
+            <div class="field">
+              <div class="checkbox-group">
+                <label
+                  ><input type="checkbox" id="eighthNotes" /> Eighth
+                  Notes</label
+                >
+                <label><input type="checkbox" id="triplets" /> Triplets</label>
               </div>
             </div>
           </div>
-          <div class="field">
-            <label for="bpm" class="label">BPM:</label>
-            <div class="control">
-              <input type="range" id="bpm-slider" class="slider is-fullwidth" min="40" max="240" value="60">
-              <button id="bpm-decrease" class="button is-small is-info">-</button>
-              <input class="input is-rounded is-small is-info" type="number" id="bpm-display" min="40" max="240" value="60">
-              <button id="bpm-increase" class="button is-small is-info">+</button>
-            </div>
-          </div>
-          <div class="field">
-            <div class="control">
-              <button id="start-stop" class="button is-success">Start/Stop</button>
-            </div>
-            <div id="feedback"></div>
-          </div>
-        </div>
-      </div>
-      <div class="column is-one-third">
-        <div class="box">
-          <div class="field">
-            <div class="checkbox-group">
-              <label><input type="checkbox" id="eighthNotes"> Eighth Notes</label>
-              <label><input type="checkbox" id="triplets"> Triplets</label>
-            </div>
-          </div>
-        </div>
-        <div class="box">
+          <!-- <div class="box">
           <div class="field">
             Want to practice ritardando?     
           </div>
           <a href="rit.html" class="button is-danger" id="slow-down">Go</a>
+        </div> -->
         </div>
       </div>
-
+      <a href="about.html" class="button is-link" id="about">About</a>
     </div>
-    <a href="about.html" class="button is-link" id="about">About</a>
-  </div>
 
-  <script src="metronome.js"></script>
-</body>
+    <script src="metronome.js"></script>
+  </body>
 </html>
-
-

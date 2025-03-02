@@ -7,6 +7,52 @@
   <link rel="icon" href="https://github.com/santimeza/metro-gnome/blob/main/imageFiles/gnome-favicon4.jpg?raw=true  " type="image/png">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
 </head>
+<style>
+html, body {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  background-color: #fecec0; /* Cream color */
+  margin: 0; /* Remove default margin */
+  padding: 20px; /* Add padding to the body */
+  height: 100%;
+  touch-action: manipulation;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* Ensure it takes up the full height of the viewport */
+}
+
+.measure-count-box {
+  width: 200px; /* Adjust width as needed */
+  padding: 10px;
+  background-color: #f5f5f5; /* Light gray background */
+  border: 1px solid #ccc;
+  text-align: center;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.image-custom img {
+  transform: scale(0.65); /* Scales the image to 70% */
+}
+
+  .box {
+    background-color: #fef2cf;  /* green */
+  }
+
+  #bpm-display {
+    max-width: 4rem; /* Adjust the width as needed */
+    text-align: center;
+  }
+
+  #about {
+    margin-bottom: 40px; /* Add space below the About button */
+  }
+
+</style>
 <body>
   <div class="container">
     <div class="box" id="info-box">
@@ -19,6 +65,12 @@
         </p>
       </div>
     </div>
+
+    <div class="measure-count-box">
+      <!-- Measure count will be displayed here -->
+      <p id="measureCount">Measure: 0</p>
+    </div>
+
     <div class="columns is-vcentered">
       <div class="column is-one-third">
         <div class="box">
@@ -54,22 +106,41 @@
       <div class="column is-one-third">
         <div class="box">
           <div class="field">
-            <div class="checkbox-group">
-              <label><input type="checkbox" id="eighthNotes"> Eighth Notes</label>
-              <label><input type="checkbox" id="triplets"> Triplets</label>
+            <!-- Slow Down Rate Input -->
+            <label class="label">Goal Tempo</label>
+            <div class="control">
+              <input class="input" type="number" id="goalTempo" placeholder="Enter goal tempo">
+            </div>
+          </div>
+      
+          <div class="field">
+            <!-- Number of Measures Before Slow Down Input -->
+            <label class="label">Slow down duration (in seconds)</label>
+            <div class="control">
+              <input class="input" type="number" id="ritDuration" placeholder="Amount of seconds">
+            </div>
+          </div>
+      
+          <div class="field">
+            <!-- Lead-in Count Checkbox -->
+            <label class="checkbox">
+              <input type="checkbox" id="leadInCount" onclick="toggleLeadInMeasures()"> Lead-in Count
+            </label>
+          </div>
+      
+          <div class="field">
+            <!-- Number of Lead-in Measures Input -->
+            <label class="label">Number of Lead-in Measures</label>
+            <div class="control">
+              <input class="input" type="number" id="leadInMeasures" placeholder="Enter number of lead-in measures" disabled>
             </div>
           </div>
         </div>
-        <div class="box">
-          <div class="field">
-            Back to Metro-Gnome   
-          </div>
-          <a href="index.html" class="button is-info" id="metro">Back</a>
-        </div>
       </div>
+      
       <div class="column is-one-third">
         <figure class="image image-custom">
-          <img src="https://santimeza.github.io/metro-gnome/imageFiles/metrognome_head.jpg" alt="Metro-gnome Image">
+          <img src="https://github.com/santimeza/metro-gnome/blob/main/imageFiles/gnome-on-mush.jpg?raw=true" alt="Metro-gnome Image">
         </figure>
       </div>
 
